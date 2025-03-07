@@ -85,3 +85,13 @@ let fullName = firstName + " " + lastName
 let message = "Hello World"
 console.log(message.length)
 console.log(message.toLowerCase())
+console.log(message.indexOf("World"))
+console.log(message.slice(0,5))
+
+
+//-----------------------------------------------------------------
+//Template literal
+let myName = "HItesh"
+
+let greeting = `Hello ${myName}`
+console.log(greeting)
