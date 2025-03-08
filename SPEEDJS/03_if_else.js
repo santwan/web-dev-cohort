@@ -17,12 +17,16 @@ in an online store, if customer's bill amount is more than 1000 then 10% discoun
 */
 
 function calculateTotal(amount){
-    amount = Number(amount)
+    /*amount = Number(amount)
     if(amount > 1000){
         return amount * 0.9
     }
     
-    return amount 
+    return amount  */
+    
+    return amount > 1000 ? amount*0.9 : amount
+    // let isLoading = true
+    // return isLoading ? () : ()
     
 }
 
@@ -52,4 +56,20 @@ function trafficLight(color){
     }
 }
 
-trafficLight("red")
+// trafficLight("red")
+
+//---------------------------------------------------------------------------
+function checktruthyValue(value){
+    if ( value){
+        console.log("Truthy")
+    } else {
+        console.log("False")
+    }
+}
+
+// checktruthyValue(1)
+// checktruthyValue(0)
+// checktruthyValue("Hitesh")
+// checktruthyValue("")
+// checktruthyValue([])
+// checktruthyValue([[1,2,3,4]])
