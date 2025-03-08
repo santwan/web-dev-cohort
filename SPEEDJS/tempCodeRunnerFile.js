@@ -1,1 +1,1 @@
-// let newChaiTypes = [...chaiTypes, "Chamolina Tea"]
+  // amount = Number(amount)
