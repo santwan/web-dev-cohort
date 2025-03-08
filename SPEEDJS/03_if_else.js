@@ -73,3 +73,12 @@ function checktruthyValue(value){
 // checktruthyValue("")
 // checktruthyValue([])
 // checktruthyValue([[1,2,3,4]])
+
+
+function login(username, password){
+    if(username === 'admin' && (password === "1234" || loginIP == "12390.00")){
+        console.log("Login successful")
+    } else {
+        console.log("Invalid credentials")
+    }
+}
