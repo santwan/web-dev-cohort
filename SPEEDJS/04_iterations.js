@@ -76,7 +76,7 @@ let tasks = [
 //Find the all the task which are not completed yet and sort them according to priority
 
 
-//Using forEach Loop 
+// Using forEach Loop 
 // let notCompleted = []
 // tasks.forEach((element) => {
 //     if( element.completed == false){
