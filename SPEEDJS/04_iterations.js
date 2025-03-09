@@ -100,7 +100,7 @@ let notCompleted = tasks
                 .filter((task) => task.completed==false)
                 .sort((a,b) => a.priority - b.priority)
 
-console.log(notCompleted)
+// console.log(notCompleted)
 
 //------------------------------------------------------------------------------
 
@@ -115,10 +115,13 @@ let movieRatings = [
 let avgRatingMovie = []
 
 movieRatings.forEach((movie) => {
-    movie.ratings.reduce((sum, current) => {
-        sum = sum + current
-        avg = sum / movie.ratings.length
-    }, 0)
-    avgRatingMovie.push()
+    let avg = movie.ratings.reduce((sum, current) => (sum + current), 0) / movie.ratings.length
+    avgRatingMovie.push({title: movie.title, ratings: avg.toFixed(2)})
 })
+
+let avgRatingMovieSorted = avgRatingMovie.sort((a,b) => a.ratings - b.ratings)
+console.log(avgRatingMovieSorted)
+
+
+let averageRatings = movieRatings.map()
 
