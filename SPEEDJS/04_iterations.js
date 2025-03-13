@@ -120,8 +120,15 @@ movieRatings.forEach((movie) => {
 })
 
 let avgRatingMovieSorted = avgRatingMovie.sort((a,b) => a.ratings - b.ratings)
-console.log(avgRatingMovieSorted)
+// console.log(avgRatingMovieSorted)
 
+// Now we will be rewritting this code with map()
 
-let averageRatings = movieRatings.map()
+let averageRatings = movieRatings.map((movie) => {
+    let total = movie.ratings.reduce((sum,rating) => (sum + rating), 0)
+    let average = total /movie.ratings.length
+    // movie.ratings = average   //donot use this , other wise it will change the original object( override method)
+    return {title: movie.title, avgRating: average.toFixed(2)}
+})
 
+console.log(averageRatings)
