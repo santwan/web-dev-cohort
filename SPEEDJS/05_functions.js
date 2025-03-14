@@ -1,15 +1,15 @@
-function greet ( name ){
-    console.log(`Hello ${name}`)
-}
+// function greet ( name ){
+//     console.log(`Hello ${name}`)
+// }
 
-let globalVar = "I am global"
+// let globalVar = "I am global"
 
 
-function modifyGlobal(){
-    globalVar = "I am modified"
-    let blockScopedVar = "I am blocked-scope"
-    console.log(blockScopedVar)
-}
+// function modifyGlobal(){
+//     globalVar = "I am modified"
+//     let blockScopedVar = "I am blocked-scope"
+//     console.log(blockScopedVar)
+// }
 
 // modifyGlobal()
 
@@ -25,17 +25,17 @@ let config = function(){}() //IIFE Immediately Invoked function expression
 // }
 
 
-let person1 = {
-    name: "ravi",
-    greet: function(){
-        console.log(`Hello ${this.name}`)
-    }
-}
+// let person1 = {
+//     name: "ravi",
+//     greet: function(){
+//         console.log(`Hello ${this.name}`)
+//     }
+// }
 
 
-let person2 = {
-    name: "hitesh"
-}
+// let person2 = {
+//     name: "hitesh"
+// }
 
 // person1.greet.call(person2)
 // let bindGreet = person1.greet.bind(person2) 
@@ -68,35 +68,36 @@ let person2 = {
 //What wil be output this code segment and analysis
 
 //------------------------------------------------------------------------------------------------------
-//Blog on call stack concept  and how it related with the setTimeout and impoortance of bind in this context in Javascript
+//! Blog on call stack concept  and how it related with the setTimeout and impoortance of bind in this context in Javascript
 
-// call stack waits for  nothing 
+//!  call stack waits for  nothing 
 
-//In reality , hwo this is performs in browser
+//! In reality , hwo this is performs in browser
 
-// setTimeout() isnot a feature of JS
+//! setTimeout() is not a feature of JS
 
-//Call back queue , browser push it into the call back queue
+//! Call back queue , browser push it into the call back queue
 
-// Concept of event loop in this concept , event loop took the code from the callabck queue to callback stack
+//! Concept of event loop in this concept , event loop took the code from the callabck queue to callback stack
 
 console.log("hello JS")
 setTimeout(() => console.log("A B C"), 0)
 
 console.log("Bye bye")
 
-//Explain this code sample with dry run hwo it is going to browser to call queue , call stack and whole execution process
+//! Explain this code sample with dry run hwo it is going to browser to call queue , call stack and whole execution process
 
 
-console.log("hello JS")
-setTimeout(() => console.log("A B C"), 1000 * 10) // MInimum time 10s wait ... NO gurrantee of maximum time
+// console.log("hello JS")
+// setTimeout(() => console.log("A B C"), 1000 * 10) // MInimum time 10s wait ... NO gurrantee of maximum time
 
-console.log("Bye bye")
-console.log("Bye bye")
-console.log("Bye bye")
-console.log("Bye bye")
-console.log("Bye bye")
-console.log("Bye bye")
+// console.log("Bye bye")
+// console.log("Bye bye")
+// console.log("Bye bye")
+// console.log("Bye bye")
+// console.log("Bye bye")
+// console.log("Bye bye")
+
 //....... 100 Million time console.log that  is almost equal to 3 hours  
 // Then What will be expected output , when A B C output should print on the terminal 
 // Should it be print on the terminal after just 10 second or after 3 hours
@@ -120,6 +121,22 @@ console.log("Bye bye")
 //------------------------------------------------------------------------------------------------
 
 //Promises in Javascript
+//Micro Task queue and callback queue or Task queue
 
+// console.log("Hi")
 
+// setTimeout(()=> console.log("Hello after 2s"), 2*1000)
 
+// Promise.resolve().then(()=> console.log('Promise Resolve Hogya'))
+
+// console.log("BYE")
+
+// console.log("Hi")
+
+// setTimeout(()=> console.log("Hello after 2s"), 0)
+
+// Promise.resolve().then(()=> console.log('Promise Resolve Hogya'))
+
+// setTimeout(()=> console.log("Hello after 2s"), 0)
+
+// console.log("BYE")
