@@ -46,25 +46,25 @@ let person2 = {
 // person1.greet.call(person2)  
 
 //----------------------------------------------------------------------------------------------
-const obj = {
-    personName: "Santwan", 
-    greet: function(){
-        console.log(`Hello, ${this.personName}`)
-    },
-}
+// const obj = {
+//     personName: "Santwan", 
+//     greet: function(){
+//         console.log(`Hello, ${this.personName}`)
+//     },
+// }
 
 
-console.log("Hello Bye bye")
+// console.log("Hello Bye bye")
 
-setTimeout(obj.greet, 1000 * 3)
+// setTimeout(obj.greet, 1000 * 3)
 
-setTimeout(function(){
-    console.log("Hello")
-}, 1000*5 /*Second argument in ms */)
+// setTimeout(function(){
+//     console.log("Hello")
+// }, 1000*5 /*Second argument in ms */)
 
 
-a = 10 , b = 12
-console.log('sum', a + b )
+// a = 10 , b = 12
+// console.log('sum', a + b )
 
 //Blog on call stack concept in Javascript
 
@@ -74,3 +74,27 @@ console.log('sum', a + b )
 
 // setTimeout() isnot a feature of JS
 
+//Call back queue , browser push it into the call back queue
+
+// Concept of event loop in this concept , event loop took the code from the callabck queue to callback stack
+
+console.log("hello JS")
+setTimeout(() => console.log("A B C"), 0)
+
+console.log("Bye bye")
+
+//Explain this code sample with dry run hwo it is going to browser to call queue , call stack and whole execution process
+
+
+console.log("hello JS")
+setTimeout(() => console.log("A B C"), 1000 * 10) // MInimum time 10s wait ... NO gurrantee of maximum time
+
+console.log("Bye bye")
+console.log("Bye bye")
+console.log("Bye bye")
+console.log("Bye bye")
+console.log("Bye bye")
+console.log("Bye bye")
+//....... 100 Million time console.log that  is almost equal to 3 hours  
+// Then What will be expected output , when A B C output should print on the terminal 
+// Should it be print on the terminal after just 10 second or after 3 hours
