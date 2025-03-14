@@ -68,7 +68,7 @@ let person2 = {
 //What wil be output this code segment and analysis
 
 //------------------------------------------------------------------------------------------------------
-//Blog on call stack concept in Javascript
+//Blog on call stack concept  and how it related with the setTimeout and impoortance of bind in this context in Javascript
 
 // call stack waits for  nothing 
 
@@ -117,4 +117,9 @@ console.log("Bye bye")
 // console.log("bye")
 
 
-//----------------
+//------------------------------------------------------------------------------------------------
+
+//Promises in Javascript
+
+
+
