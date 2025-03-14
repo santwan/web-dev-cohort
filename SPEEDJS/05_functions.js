@@ -65,7 +65,9 @@ let person2 = {
 
 // a = 10 , b = 12
 // console.log('sum', a + b )
+//What wil be output this code segment and analysis
 
+//------------------------------------------------------------------------------------------------------
 //Blog on call stack concept in Javascript
 
 // call stack waits for  nothing 
