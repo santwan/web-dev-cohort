@@ -100,3 +100,21 @@ console.log("Bye bye")
 //....... 100 Million time console.log that  is almost equal to 3 hours  
 // Then What will be expected output , when A B C output should print on the terminal 
 // Should it be print on the terminal after just 10 second or after 3 hours
+
+//---------------------------------------------------------------------------------------------------------
+// const obj = {
+//     personName: "Akash",
+//     greet: function(){
+//         console.log( `Hello, ${this.personName}`)
+//     },
+// }
+
+// console.log("Hi")
+
+// setTimeout(obj.greet, 5*1000)
+// setTimeout(obj.greet.bind(obj), 5*1000)
+
+// console.log("bye")
+
+
+//----------------
