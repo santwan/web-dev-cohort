@@ -70,4 +70,7 @@ console.log('sum', a + b )
 
 // call stack waits for  nothing 
 
+//In reality , hwo this is performs in browser
+
+// setTimeout() isnot a feature of JS
 
