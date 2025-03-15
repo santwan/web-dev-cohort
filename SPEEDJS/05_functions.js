@@ -80,10 +80,10 @@ let config = function(){}() //IIFE Immediately Invoked function expression
 
 //! Concept of event loop in this concept , event loop took the code from the callabck queue to callback stack
 
-console.log("hello JS")
-setTimeout(() => console.log("A B C"), 0)
+// console.log("hello JS")
+// setTimeout(() => console.log("A B C"), 0)
 
-console.log("Bye bye")
+// console.log("Bye bye")
 
 //! Explain this code sample with dry run hwo it is going to browser to call queue , call stack and whole execution process
 
@@ -141,3 +141,61 @@ console.log("Bye bye")
 // setTimeout(()=> console.log("Hello after 2s"), 0)
 
 // console.log("BYE")
+
+// From this concept of Micro task queue comes.... In javascript there are two types of queue
+// Micro Task queue ( Higher priority ) and Call back queue or Task queue
+
+// Starvation
+
+// setTimeout(()=> console.log("Hello after 2s"), 0)
+
+// Promise.resolve().then(()=> {
+//     console.log('Promise Resolve Hogya')
+
+//     Promise.resolve().then(() => {
+//         console.log('Promise Resolve Hogya')
+
+//         Promise.resolve().then(() => {
+//             console.log('Promise Resolve Hogya')
+//         })
+//     })
+// })
+
+// setTimeout(()=> console.log("Hello after 2s"), 0)
+
+// console.log("BYE")
+
+
+
+//______________________________________________________________________________________
+
+// const age = 23
+
+// console.log("Age is ", age)
+
+
+// console.log("Age is ", age)
+// const age = 23
+
+
+// test()
+
+// function test(){
+//     console.log("I am inside the function")
+// }
+
+
+// function test(){
+//     console.log("I am inside the function")
+// }
+// test()
+
+
+
+// console.log("Age is ", age)
+
+// var age = 24
+
+console.log("Age is ", age)
+
+var age = 24
