@@ -168,37 +168,47 @@ let config = function(){}() //IIFE Immediately Invoked function expression
 
 
 //______________________________________________________________________________________
-
+//! Global Context Execution ( Memory Phase & Code Phase )
+//! Hoisting Concept
 // const age = 23
 // console.log("Age is ", age)
 
-
+//*--------------------------------------------------
 // console.log("Age is ", age)
 // const age = 23
 
-
+//*--------------------------------------------------
 // test()
 // function test(){
 //     console.log("I am inside the function")
 // }
 
-
+//*--------------------------------------------------
 // function test(){
 //     console.log("I am inside the function")
 // }
 // test()
 
-
-
+//*--------------------------------------------------
 // console.log("Age is ", age)
 // var age = 24
 
 
-
+//*--------------------------------------------------
 // console.log("Age is ", age)
 // var age = 24
 
+//*--------------------------------------------------
+// age = 3000
+// console.log("Age is ", age)
+// var age = 24
 
-age = 3000
+//*--------------------------------------------------
+// age = 3000
+// console.log("Age is ", age)
+// let age = 24
+
+//*--------------------------------------------------
 console.log("Age is ", age)
 var age = 24
+console.logD("Age is ", age)
