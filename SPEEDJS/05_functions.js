@@ -170,7 +170,6 @@ let config = function(){}() //IIFE Immediately Invoked function expression
 //______________________________________________________________________________________
 
 // const age = 23
-
 // console.log("Age is ", age)
 
 
@@ -179,7 +178,6 @@ let config = function(){}() //IIFE Immediately Invoked function expression
 
 
 // test()
-
 // function test(){
 //     console.log("I am inside the function")
 // }
@@ -193,9 +191,14 @@ let config = function(){}() //IIFE Immediately Invoked function expression
 
 
 // console.log("Age is ", age)
-
 // var age = 24
 
-console.log("Age is ", age)
 
+
+// console.log("Age is ", age)
+// var age = 24
+
+
+age = 3000
+console.log("Age is ", age)
 var age = 24
