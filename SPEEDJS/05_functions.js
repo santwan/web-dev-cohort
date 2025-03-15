@@ -193,6 +193,12 @@ let config = function(){}() //IIFE Immediately Invoked function expression
 // console.log("Age is ", age)
 // var age = 24
 
+//*--------------------------------------------------
+// console.log("Age is ", age)
+// let age = 24
+
+//Reference Error : age is not defined 
+// Cannot access 'age' before initialization
 
 //*--------------------------------------------------
 // console.log("Age is ", age)
@@ -209,6 +215,6 @@ let config = function(){}() //IIFE Immediately Invoked function expression
 // let age = 24
 
 //*--------------------------------------------------
-console.log("Age is ", age)
-var age = 24
-console.logD("Age is ", age)
+// console.log("Age is ", age)
+// var age = 24
+// console.logD("Age is ", age)
