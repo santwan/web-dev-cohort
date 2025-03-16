@@ -51,6 +51,6 @@ let newArr = nagetiveIndex(arr)
 
 console.log(newArr[-1])
 
-newArr[-1] = 22
-console.log(newArr)
-console.log(arr) // Shallow copy and deep copy concept
+// newArr[-1] = 22
+// console.log(newArr)
+// console.log(arr) // Shallow copy and deep copy concept
