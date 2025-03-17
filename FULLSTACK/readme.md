@@ -13,3 +13,9 @@ Semantic versioning
 
 
   port 
+
+
+Read and understand cors
+app.use(cors({
+    origin: 'http://localhost:3000'
+}))
