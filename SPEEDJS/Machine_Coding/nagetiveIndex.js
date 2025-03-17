@@ -54,3 +54,8 @@ console.log(newArr[-1])
 // newArr[-1] = 22
 // console.log(newArr)
 // console.log(arr) // Shallow copy and deep copy concept
+
+
+function nagetiveArr( int b {
+    return new 
+}
