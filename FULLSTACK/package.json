@@ -1,0 +1,12 @@
+{
+  "name": "fullstack",
+  "version": "1.0.0",
+  "description": "A node proeject for authentication",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "santwanpathak",
+  "license": "ISC"
+}
