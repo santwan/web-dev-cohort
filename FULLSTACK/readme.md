@@ -5,3 +5,11 @@ Express js
 
 "express": "^4.21.2" 
 Semantic versioning
+
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  npm run start
+
+
+  port 
