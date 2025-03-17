@@ -7,8 +7,17 @@ import express from "express"
 const app = express()
 const port = 3000
 
+
 app.get('/', (req, res) => {
-  res.send('Hello World!')
+  res.send('Hello Babu fuck You')
+})
+
+app.get('/hitesh', (req, res) => {
+  res.send('Hitesh')
+})
+
+app.get("/piyush", (request , response) =>{
+    response.send("Piyush!!")
 })
 
 app.listen(port, () => {
