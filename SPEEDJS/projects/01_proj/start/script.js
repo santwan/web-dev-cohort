@@ -3,11 +3,16 @@ function updateClock (){
     const timeElement = document.getElementById('time')
     // console.log(timeElement)
     const dateElement = document.getElementById('date')
+    options = {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+    }
 
     const now = new Date()
     const hours = now.getHours() % 12 || 12
     console.log(hours)
-
     // const time = 1 || 12
     // console.log(time)
     // const minutes = now.getMinutes()
@@ -21,8 +26,9 @@ function updateClock (){
     const ampm = now.getHours() >= 12 ? "PM" : "AM"
 
     timeElement.textContent = `${hours}:${minutes}:${seconds}:${ampm}`
-
+    const date = now.toLocaleDateString(undefined, options)
+    dateElement.innerText = date
 }
-
+ 
 setInterval(updateClock, 1000)
 
