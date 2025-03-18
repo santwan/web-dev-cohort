@@ -1,12 +1,12 @@
 import mongoose from "mongoose"
 
-const userScenma = new mongoose.Schema({
+const userSchema = new mongoose.Schema({
     name: String,
     email: String,
 })
 
 
-const User  = mongoose.model("User", userScenma)
+const User  = mongoose.model("User", userSchema)
 
 
 export default User
