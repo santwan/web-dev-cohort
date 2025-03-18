@@ -6,6 +6,9 @@ import express from "express"
 import dotenv from "dotenv"
 import cors from "cors"
 import db from "./utils/db.js"
+//import all routes
+import userRoutes from "./routes/user.routes.js"
+import { registerUser } from "./controller/user.controller.js"
 
 dotenv.config()
 
@@ -35,6 +38,10 @@ app.get("/piyush", (request , response) =>{
  
 //connect to db 
 db()
+
+
+//user routes
+app.use("/api/v1/users" , userRoutes)
 
 app.listen(process.env.PORT, () => {
   console.log(`Example app listening on port ${port}`)

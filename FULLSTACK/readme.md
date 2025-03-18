@@ -39,3 +39,9 @@ understand the db js file
 import db in the index.js file , while importing remember to write db.js ,,,, sometimes it gives error if you only write db 
 
 
+created user.model.js 
+then inside write some code that wil define the schema
+
+Controler and routes 
+
+created routes folder and controller folder
