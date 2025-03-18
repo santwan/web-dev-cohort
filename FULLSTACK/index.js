@@ -7,8 +7,8 @@ import cors from "cors"
 import db from "./utils/db.js"
 
 //import all routes
-// import userRoutes from "./routes/user.routes.js"
-// import { registerUser } from "./controller/user.controller.js"
+import userRoutes from "./routes/user.routes.js"
+import { registerUser } from "./controller/user.controller.js"
 
 dotenv.config()
 
