@@ -20,25 +20,20 @@ app.use(cors({
     methods: ['GET', 'POST', 'DELETE', 'OPTION' ],
     allowedHeaders: ['Content-Type', 'Authorization']
 }))
+app.use(express.json())
+app.use(express.urlencoded({
+  extended: true,
+}))
 
 const port = process.env.PORT || 3000
 
 
 app.get('/', (req, res) => {
-  res.send('Hello Babu fuck You')
+  res.send('Hello Mars')
 })
 
-app.get('/hitesh', (req, res) => {
-  res.send('Hitesh')
-})
-
-app.get("/piyush", (req , res) =>{
-    res.send("Piyush!!")
-})
- 
 //connect to db 
 db()
-
 
 //user routes
 app.use("/api/v1/users/" , userRoutes)
@@ -46,4 +41,3 @@ app.use("/api/v1/users/" , userRoutes)
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
-

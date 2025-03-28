@@ -1,7 +1,7 @@
 {
   "name": "fullstack",
   "version": "1.0.0",
-  "description": "A node proeject for authentication",
+  "description": "A node project for authentication",
   "main": "index.js",
   "type": "module",
   "scripts": {
@@ -19,3 +19,4 @@
     "nodemon": "^3.1.9"
   }
 }
+
