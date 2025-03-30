@@ -45,7 +45,7 @@ app.get('/', (req, res) => {
 db(); 
 
 // User routes: Mount all user-related API routes under '/api/v1/users/'
-app.use("/api/v1/users/", userRoutes);
+app.use("/api/v1/users", userRoutes);
 // This means all routes inside userRoutes will be prefixed with '/api/v1/users/'
 // Example: If userRoutes has 'GET /', it will be accessible as 'GET /api/v1/users/'
 
