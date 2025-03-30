@@ -1,42 +1,51 @@
-// require  - 
-// import  - If you are using import then you have to go to package.json file and have to make some changes - Add "type": "module"  in the object.
-// const express = require('express')
-import express from "express"
-import dotenv from "dotenv"
-import cors from "cors"
-import db from "./utils/db.js"
+// In Node.js, there are two module systems:
+// 1. CommonJS (require)
+// 2. ES Module (import)
+// If using 'import', update package.json by adding "type": "module"
+import express from "express"; // Import the Express framework to create the server
+import dotenv from "dotenv"; // Import dotenv to load environment variables from a .env file
+import cors from "cors"; // Import CORS (Cross-Origin Resource Sharing) to allow API access from different origins
+import db from "./utils/db.js"; // Import the database connection function from the utils folder
 
-//import all routes
-import userRoutes from "./routes/user.routes.js"  // Importing the user routes (default export) from user.routes.js
-import { registerUser } from "./controller/user.controller.js"
+// Import all routes
+import userRoutes from "./routes/user.routes.js"; // Import user routes (default export) from user.routes.js
+import { registerUser } from "./controller/user.controller.js"; // Import a named function from the user controller file
 
-dotenv.config()
+// Load environment variables from .env file (e.g., PORT, BASE_URL)
+dotenv.config(); 
 
-const app = express();
+// Create an instance of an Express application
+const app = express(); 
 
+// Middleware: Enable CORS to handle cross-origin requests
 app.use(cors({
-    origin: process.env.BASE_URL,
-    credentials: true,
-    methods: ['GET', 'POST', 'DELETE', 'OPTION' ],
-    allowedHeaders: ['Content-Type', 'Authorization']
-}))
-app.use(express.json())
-app.use(express.urlencoded({
-  extended: true,
-}))
+    origin: process.env.BASE_URL, // Allow requests only from the BASE_URL specified in .env
+    credentials: true, // Allow sending cookies and authentication headers in requests
+    methods: ['GET', 'POST', 'DELETE', 'OPTION'], // Specify allowed HTTP methods
+    allowedHeaders: ['Content-Type', 'Authorization'] // Allow only specific request headers
+}));
 
-const port = process.env.PORT || 3000
+// Middleware: Enable parsing of JSON request bodies
+app.use(express.json()); 
 
+// Middleware: Enable parsing of URL-encoded form data
+app.use(express.urlencoded({ 
+  extended: true, // Allow nested objects in URL-encoded data
+}));
 
+// Define the port for the server (use value from .env or default to 3000)
+const port = process.env.PORT || 3000;
+
+// Define a basic test route
 app.get('/', (req, res) => {
-  res.send('Hello Mars')
-})
+  res.send('Hello Mars'); // Responds with 'Hello Mars' when accessing '/'
+});
 
-//connect to db 
-db()
+// Connect to the database (calls the imported db function)
+db(); 
 
-//user routes
-app.use("/api/v1/users/", userRoutes); // Mounting the userRoutes at '/api/v1/users/'
+// User routes: Mount all user-related API routes under '/api/v1/users/'
+app.use("/api/v1/users/", userRoutes);
 // This means all routes inside userRoutes will be prefixed with '/api/v1/users/'
 // Example: If userRoutes has 'GET /', it will be accessible as 'GET /api/v1/users/'
 
