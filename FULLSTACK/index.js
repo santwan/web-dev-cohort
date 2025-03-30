@@ -7,7 +7,7 @@ import cors from "cors"
 import db from "./utils/db.js"
 
 //import all routes
-import userRoutes from "./routes/user.routes.js"
+import userRoutes from "./routes/user.routes.js"  // Importing the user routes (default export) from user.routes.js
 import { registerUser } from "./controller/user.controller.js"
 
 dotenv.config()
@@ -36,7 +36,9 @@ app.get('/', (req, res) => {
 db()
 
 //user routes
-app.use("/api/v1/users/" , userRoutes)
+app.use("/api/v1/users/", userRoutes); // Mounting the userRoutes at '/api/v1/users/'
+// This means all routes inside userRoutes will be prefixed with '/api/v1/users/'
+// Example: If userRoutes has 'GET /', it will be accessible as 'GET /api/v1/users/'
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)

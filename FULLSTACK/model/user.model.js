@@ -6,8 +6,8 @@ const userSchema = new mongoose.Schema({
     password: String,
     role: {
         type: String,
-        enum: ["user", "admin"],
-        default: "user",
+        enum: ["user", "admin"], //enumeration - sirf ini mese value select karo
+        default: "user", 
     },
     isVerified: {
         type: Boolean,
