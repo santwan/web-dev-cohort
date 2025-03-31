@@ -9,7 +9,7 @@ import nodemailer from "nodemailer";
 
 // Define an asynchronous function to register a user
 const registerUser = async (req, res) => {
-    // 1️⃣ GET USER DATA FROM REQUEST BODY
+    //! GET USER DATA FROM REQUEST BODY
     // Extract name, email, and password from req.body (data sent by the user in the request)
     const { name, email, password } = req.body;
 
@@ -20,7 +20,7 @@ const registerUser = async (req, res) => {
         });
     }
 
-    // 2️⃣ CHECK IF USER ALREADY EXISTS
+    //!  CHECK IF USER ALREADY EXISTS
     try {
         // Query MongoDB to check if a user with the same email already exists
         const existingUser = await User.findOne({ email });
@@ -100,5 +100,37 @@ const registerUser = async (req, res) => {
     } 
 };
 
+
+//Verifying the user imaginaing that user have received the link in the mail
+const verifyUser = async (req, res) => {
+    //get token from the url
+    //validate the token from teh url
+    // find user based on token 
+    //if not 
+    // set isVerified field to true
+    //removing the verification token 
+    //save and return response
+
+    const {token} = req.params;
+    console.log(token);
+    if(!token){
+        return res.status(400).json({
+            message: "Invalid token"
+        })
+    }
+    const user = await User.findOne({verificationToken: token })
+
+    
+    if(!user){
+        return res.status(400).json({
+            message: "Invalid token",
+        })
+    }
+
+    user.isVerified = true;
+    user.verificationToken = undefined;
+    await user.save()
+
+}
 // Export the registerUser function for use in routes
-export { registerUser };
+export { registerUser , verifyUser };
