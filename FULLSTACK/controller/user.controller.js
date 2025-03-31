@@ -182,7 +182,25 @@ const login = async (  req, res ) => {
                 expressIn: '24h'
             }
         )
-        
+
+        const cookieOptions ={
+            httpOnly: true,
+            secure: true,
+            maxAge: 24*60*60*1000,
+        }
+        res.cookie("test", token, cookieOptions)
+
+        res.status(200).json({
+            success: true, 
+            message: "Login Successful",
+            token,
+            user: {
+                id: user._id,
+                name: user.name,
+                role: user.role
+             }
+        })
+
 
 
     } catch (error){
@@ -191,4 +209,4 @@ const login = async (  req, res ) => {
 }
 
 // Export the registerUser function for use in routes
-export { registerUser , verifyUser };
+export { registerUser , verifyUser , login};

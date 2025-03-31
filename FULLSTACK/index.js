@@ -6,6 +6,7 @@ import express from "express"; // Import the Express framework to create the ser
 import dotenv from "dotenv"; // Import dotenv to load environment variables from a .env file
 import cors from "cors"; // Import CORS (Cross-Origin Resource Sharing) to allow API access from different origins
 import db from "./utils/db.js"; // Import the database connection function from the utils folder
+import cookieParser from "cookie-parser";
 
 // Import all routes
 import userRoutes from "./routes/user.routes.js"; // Import user routes (default export) from user.routes.js
@@ -32,6 +33,8 @@ app.use(express.json());
 app.use(express.urlencoded({ 
   extended: true, // Allow nested objects in URL-encoded data
 }));
+
+app.use(cookieParser()) // now we can access the cookies 
 
 // Define the port for the server (use value from .env or default to 3000)
 const port = process.env.PORT || 3000;
