@@ -99,10 +99,6 @@ const registerUser = async (req, res) => {
         });
     } 
 };
-
-
-//Verifying the user imaginaing that user have received the link in the mail
-const verifyUser = async (req, res) => {
     //get token from the url
     //validate the token from teh url
     // find user based on token 
@@ -111,26 +107,44 @@ const verifyUser = async (req, res) => {
     //removing the verification token 
     //save and return response
 
-    const {token} = req.params;
-    console.log(token);
-    if(!token){
-        return res.status(400).json({
-            message: "Invalid token"
-        })
-    }
-    const user = await User.findOne({verificationToken: token })
+//Verifying the user imaginaing that user have received the link in the mail
+const verifyUser = async (req, res) => {
+    // 🔹 Extract the verification token from the URL parameters
+    const { token } = req.params;
+    console.log(token); // Log the token for debugging
 
-    
-    if(!user){
+    // 🔹 Check if the token exists in the request
+    if (!token) {
         return res.status(400).json({
-            message: "Invalid token",
-        })
+            message: "Invalid token", // Return error if no token is provided
+        });
     }
 
+    // 🔹 Find a user in the database with the matching verification token
+    const user = await User.findOne({ verificationToken: token });
+
+    // 🔹 If no user is found with the given token, return an error
+    if (!user) {
+        return res.status(400).json({
+            message: "Invalid token", // User not found, meaning token is incorrect or expired
+        });
+    }
+
+    // 🔹 If the user exists, mark them as verified
     user.isVerified = true;
-    user.verificationToken = undefined;
-    await user.save()
 
-}
+    // 🔹 Remove the verification token to prevent reuse
+    user.verificationToken = undefined;
+
+    // 🔹 Save the updated user data in the database
+    await user.save();
+
+    // 🔹 Send success response to the client
+    res.status(200).json({
+        message: "User successfully verified!",
+        success: true,
+    });
+};
+
 // Export the registerUser function for use in routes
 export { registerUser , verifyUser };
