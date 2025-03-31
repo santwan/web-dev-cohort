@@ -4,6 +4,6 @@ import { registerUser } from "../controller/user.controller.js"
 const router = express.Router()   // boiler plate syntax
 
 
-router.get("/register", registerUser)
+router.post("/register", registerUser)
 
 export default router
