@@ -7,6 +7,8 @@ import crypto from "crypto";
 // Import 'nodemailer' to send verification emails
 import nodemailer from "nodemailer";
 
+import bcrypt, { compare } from "bcrypt"
+
 // Define an asynchronous function to register a user
 const registerUser = async (req, res) => {
     //! GET USER DATA FROM REQUEST BODY
@@ -99,6 +101,7 @@ const registerUser = async (req, res) => {
         });
     } 
 };
+
     //get token from the url
     //validate the token from teh url
     // find user based on token 
@@ -106,8 +109,7 @@ const registerUser = async (req, res) => {
     // set isVerified field to true
     //removing the verification token 
     //save and return response
-
-//Verifying the user imaginaing that user have received the link in the mail
+//!  Verifying the user imaginaing that user have received the link in the mail
 const verifyUser = async (req, res) => {
     // 🔹 Extract the verification token from the URL parameters
     const { token } = req.params;
@@ -145,6 +147,38 @@ const verifyUser = async (req, res) => {
         success: true,
     });
 };
+
+const login = async (  req, res ) => {
+    const {email, password } = req.body
+
+    if(!email || !password ){
+        return res.status(400).json({
+            message: "All fields are required"
+        })
+    }
+
+    try {
+        const user = User.findOne({email: email})
+        if(!user){
+            return res.status(400).json({
+                message: "Invalid email or password"
+            })
+        }
+
+        const isMatch = await bcrypt.compare(password, user.password)
+        console.log(isMatch)
+
+        if(!isMatch){
+            return res.status(400).json({
+                message: "Invalid email or password"
+            })
+        }
+
+
+    } catch (error){
+
+    }
+}
 
 // Export the registerUser function for use in routes
 export { registerUser , verifyUser };
