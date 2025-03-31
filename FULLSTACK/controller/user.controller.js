@@ -9,6 +9,8 @@ import nodemailer from "nodemailer";
 
 import bcrypt, { compare } from "bcrypt"
 
+import jwt from "jsonwebtoken"
+
 // Define an asynchronous function to register a user
 const registerUser = async (req, res) => {
     //! GET USER DATA FROM REQUEST BODY
@@ -173,6 +175,14 @@ const login = async (  req, res ) => {
                 message: "Invalid email or password"
             })
         }
+
+        const token = jwt.sign({id: user_id, role: user.role},
+
+            "shhhhh", {
+                expressIn: '24h'
+            }
+        )
+        
 
 
     } catch (error){
