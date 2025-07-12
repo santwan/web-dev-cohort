@@ -28,4 +28,9 @@ app.use(express.urlencoded({ extended: true }));
 
 #### This line tells Express:
 > "Hey, please understand and extract the form data sent from the client, and put it inside req.body so I can use it."
+
+- extended: true allows parsing of nested objects and arrays (e.g., user[name]=Santwan) using the qs library.
+
+- It's more powerful and flexible than extended: false, so it's generally recommended for modern apps.
+
 </details>
