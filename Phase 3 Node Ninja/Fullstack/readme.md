@@ -16,13 +16,14 @@ app.use(express.json());
 
 --- 
 
-```ja
+```js
 app.use(express.urlencoded({ extended: true }));
 ```
-When a user submits a form on a website (like a login or contact form), the browser sends that data to the server in a format called URL-encoded.
+- When a user submits a form on a website (like a login or contact form), the browser sends that data to the server in a format called URL-encoded.
 
-This format looks like this: `name=Santwan&age=21`
-But Express (the server) doesn’t automatically understand this format. So we use:
+- This format looks like this: `name=Santwan&age=21`
+- But Express (the server) doesn’t automatically understand this format. 
+- So we use:
 #### `app.use(express.urlencoded({ extended: true }));`
 
 #### This line tells Express:
