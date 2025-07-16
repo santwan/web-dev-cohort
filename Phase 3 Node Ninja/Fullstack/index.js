@@ -1,15 +1,16 @@
 // const express = require('express')
 import express from 'express';
 import dotenv from "dotenv";
-import cors from "cors"
+import cors from "cors";
+import db from './utils/db.js';
+
 
 dotenv.config()
-
 
 const app = express(); // App ke pass express ki sari saktiyaan transfer ho rahi hain
 
 app.use(cors({
-    origin: "https://localhost:3000",
+    origin: process.env.BASE_URL,
     methods: ['get', 'post', 'delete', 'options'],
     allowedHeaders: ['Content-type', 'Authorization'],
     Credentials: true,
@@ -42,7 +43,8 @@ app.get("/piyush", (req, res) => {
     res.send("Piyush!");
 })
 
-console.log(process.env.PORT)
+
+db();
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
