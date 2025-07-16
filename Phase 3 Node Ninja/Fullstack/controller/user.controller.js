@@ -1,5 +1,7 @@
 import { User } from "../model/User.model.js"
 import crypto from "crypto"
+import req from "express/lib/request.js"
+import nodemailer from "nodemailer"
 
 
 const registerUser  = async ( req, res ) => {
@@ -45,26 +47,55 @@ const registerUser  = async ( req, res ) => {
             })
         }
 
-        //! Generating the token 
+        // Generating the token 
         const token = crypto.randomBytes(32).toString("hex")
         console.log(token)
 
-        //* Saving the token to DB
+        // Saving the token to DB
         user.verificationToken = token
         await user.save()
         
 
+        // send mail
+        const transporter = nodemailer.createTransport({
+            host: process.env.MAILTRAP_HOST,
+            port: process.env.MAILTRAP_PORT,
+            secure: false, // true for 465, false for other ports
+            auth: { 
+                user: process.env.MAILTRAP_USERNAME,
+                pass: process.env.MAILTRAP_PASSWORD,
+            },    
+        });
+
+        const mailOption = {
+            from: process.env.MAILTRAP_SENDEREMAIL,
+            to: user.email,
+            subject: "Verify your email",
+            text: `Please Click on the following link: ${process.env.BASE_URL}/api/v1/users/verify/${token} `
+        }
+
+        await transporter.sendMail(mailOption)
 
 
-
-
-
+        res.status(201).json({
+            message: "User Registered Successfully",
+            success: true,
+        })
 
     } catch(error){
-
+            res.status(400).json({
+            message: "Something Went Wrong",
+            error,
+            success: false,
+        })
     }
 
 
+
+}
+
+
+const verifyUser = async (req, res ) => {
 
 }
 

@@ -5,16 +5,22 @@ import cors from "cors";
 import db from './utils/db.js';
 
 
+//import all the routes
+import userRoutes from "./routes/user.routes.js";
+
+
+
 dotenv.config()
 
 const app = express(); // App ke pass express ki sari saktiyaan transfer ho rahi hain
 
 app.use(cors({
-    origin: process.env.BASE_URL,
-    methods: ['get', 'post', 'delete', 'options'],
-    allowedHeaders: ['Content-type', 'Authorization'],
-    Credentials: true,
-}))
+  origin: process.env.BASE_URL,
+  methods: ['GET', 'POST', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
+}));
+
 
 // Middleware to parse incoming JSON requests
 // This allows your server to accept and understand JSON data in request bodies (e.g., POST, PUT requests)
@@ -43,8 +49,12 @@ app.get("/piyush", (req, res) => {
     res.send("Piyush!");
 })
 
-
+// Connect to DB
 db();
+
+//usr routes
+app.use("/api/v1/users", userRoutes)
+
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)

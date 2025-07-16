@@ -5,13 +5,14 @@ dotenv.config()
 // export a function that connects to db
 
 const db = () => {
-    mongoose.connect(process.env.MONGO_URL)
-    .then(() => {
-        console.log('Connected to mongoDB')
-    })
-    .catch(() => {
-        console.log('Error connecting to mongodb')
-    })
+    mongoose
+        .connect(process.env.MONGO_URL)
+        .then(() => {
+            console.log('Connected to mongoDB')
+        })
+        .catch((err) => {
+            console.log('Error connecting to mongodb')
+        })
 }
 
 
