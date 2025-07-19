@@ -96,6 +96,42 @@ const registerUser  = async ( req, res ) => {
 
 
 const verifyUser = async (req, res ) => {
+    //get token from the url
+    //validate token
+    // find user based on token from the DB
+    // If not
+    // if user found => set isVerified to True
+    // remove the verification token
+    // save 
+    // return response
+
+    const {token} = req.params
+    console.log(token)
+    if(!token){
+        return res.status(400).json({
+            message: "Invalid token",
+        })
+    }
+
+    const user = await User.findOne({verificationToken: token})
+
+    if (!user) {
+        return res.status(400).json({
+            message: "Invalid or expired token",
+            success: false
+        });
+    }
+
+    user.isVerified = true;
+
+    user.verificationToken = undefined;
+
+    await user.save();
+
+        res.status(200).json({
+        message: "Email verified successfully",
+        success: true
+    });
 
 }
 
@@ -107,5 +143,6 @@ const login =  async (req, res ) => {
 export {
     registerUser,
     login,
+    verifyUser,
 
 }
