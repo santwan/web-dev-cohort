@@ -8,7 +8,7 @@ import {
 
 const router = express.Router()
 router.get("/register", registerUser);
-router.get("/verify", verifyUser)
+router.get("/verify/:token", verifyUser)
 
 
 export default router;
