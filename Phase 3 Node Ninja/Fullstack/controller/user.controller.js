@@ -7,7 +7,11 @@ import crypto from "crypto"
 // Import nodemailer for sending verification emails
 import nodemailer from "nodemailer"
 
+//Importing bcrypt
+import bcrypt from "bcrypt"
 
+//importing JWT
+import jwt from "jsonwebtoken"
 
 const registerUser  = async ( req, res ) => {
     /**
@@ -95,6 +99,8 @@ const registerUser  = async ( req, res ) => {
     }
 }
 
+//!=========================================================================================================
+
 // handles all the email  verification token
 const verifyUser = async (req, res ) => {
     /**
@@ -140,8 +146,52 @@ const verifyUser = async (req, res ) => {
     });
 }
 
+//!======================================================================================================
+
 const login =  async (req, res ) => {
-    res.send("Login successful")
+    
+
+    if( !email || !password ){
+        return res.status(400).json({
+            message: "all fields are required "
+        })
+    }
+
+    const {email, password } = req.body
+
+    try {
+        const user = await User.findOne({email: email})
+        if(!user){
+            return res.status(400).json({
+                message: "Invalid email or password",
+            })
+        }
+
+        const isMatch = await bcrypt.compare(password, user.password)
+
+        console.log(isMatch)
+
+        if(!isMatch){
+            return res.status(400).json({
+                message: "Wrong password or email entered"
+            })
+        }
+
+        const token = jwt.sign({id: user._id, role: user.role},
+            "shhhhh", {
+                expiresIn: '24h'
+            }
+        )
+
+        
+        
+
+
+
+
+    } catch (error) {
+
+    }
 }
 
 
