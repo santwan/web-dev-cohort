@@ -24,7 +24,7 @@ const router = express.Router();
  *    - Generating a verification token
  *    - Sending a verification email with the token
  */
-router.get("/register", registerUser);
+router.post("/register", registerUser);
 
 /**
  * @route   GET /verify/:token
@@ -40,6 +40,9 @@ router.get("/register", registerUser);
  *    - Return a response to the frontend (success or failure)
  */
 router.get("/verify/:token", verifyUser);
+
+
+router.post("/login", login)
 
 // Exporting the router so it can be mounted in the main app (e.g., app.use("/api/users", router))
 export default router;

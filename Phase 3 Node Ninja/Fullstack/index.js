@@ -3,6 +3,7 @@ import express from 'express';
 import dotenv from "dotenv";
 import cors from "cors";
 import db from './utils/db.js';
+import cookieParser from 'cookie-parser';
 
 
 //import all the routes
@@ -33,6 +34,8 @@ app.use(express.json());  // Parses incoming requests with JSON payloads and mak
  Setting extended: true is recommended for most modern apps to handle nested form data
 */
 app.use(express.urlencoded({ extended: true }));
+
+app.use(cookieParser());
 
 
 const port = process.env.PORT || 3000; 

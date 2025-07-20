@@ -148,51 +148,80 @@ const verifyUser = async (req, res ) => {
 
 //!======================================================================================================
 
-const login =  async (req, res ) => {
-    
+const login = async (req, res) => {
+    // ✅ Step 1: Destructure email and password from the request body
+    const { email, password } = req.body;
 
-    if( !email || !password ){
+    // ✅ Step 2: Validate that both fields are provided
+    if (!email || !password) {
         return res.status(400).json({
-            message: "all fields are required "
-        })
+            message: "All fields are required"
+        });
     }
-
-    const {email, password } = req.body
 
     try {
-        const user = await User.findOne({email: email})
-        if(!user){
+        // ✅ Step 3: Check if user exists in the DB with given email
+        const user = await User.findOne({ email });
+
+        if (!user) {
             return res.status(400).json({
-                message: "Invalid email or password",
-            })
+                message: "Invalid email or password"
+            });
         }
 
-        const isMatch = await bcrypt.compare(password, user.password)
+        // ✅ Step 4: Compare entered password with hashed password in DB
+        const isMatch = await bcrypt.compare(password, user.password);
 
-        console.log(isMatch)
-
-        if(!isMatch){
+        if (!isMatch) {
             return res.status(400).json({
                 message: "Wrong password or email entered"
-            })
+            });
         }
 
-        const token = jwt.sign({id: user._id, role: user.role},
-            "shhhhh", {
-                expiresIn: '24h'
+        // ✅ Step 5: Check if user is verified
+        if (!user.isVerified) {
+            return res.status(400).json({
+                message: "Please verify your email first"
+            });
+        }
+
+        // ✅ Step 6: Generate JWT token
+        const token = jwt.sign(
+            { id: user._id, role: user.role },
+            "shhhhh", // ⚠️ Replace this with process.env.JWT_SECRET in production
+            { expiresIn: '24h' }
+        );
+
+        // ✅ Step 7: Set token in cookie
+        const cookieOptions = {
+            httpOnly: true,    // JS on client can't access this cookie
+            secure: true,      // Only sent over HTTPS (use false for localhost testing)
+            maxAge: 24 * 60 * 60 * 1000 // 24 hours
+        };
+
+        res.cookie("token", token, cookieOptions);
+
+        // ✅ Step 8: Send success response with user info (excluding password)
+        res.status(200).json({
+            success: true,
+            message: "Login successful",
+            token,
+            user: {
+                id: user._id,
+                name: user.name,
+                role: user.role
             }
-        )
-
-        
-        
-
-
-
+        });
 
     } catch (error) {
-
+        // ❌ Catch any server or database error
+        res.status(500).json({
+            message: "Something went wrong",
+            error: error.message,
+            success: false
+        });
     }
-}
+};
 
 
 export {
