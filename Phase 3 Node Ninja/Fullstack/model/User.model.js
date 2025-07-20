@@ -1,6 +1,6 @@
 // Import mongoose to define schema and create models
 import mongoose from "mongoose";
-import bcrypt from "bcryptjs";
+import bcrypt from "bcrypt";
 
 //=========================================================================================
 // ✅ Define the User schema – this acts as the structure/blueprint for each User document
@@ -50,12 +50,17 @@ const userSchema = new mongoose.Schema({
 });
 
 
-userSchema.pre("save", async function(next){
-  if(this.isModified("password")){
-    this.password = bcrypt.hash(this.password, 10)
+// ✅ Pre-save hook to hash password before saving it to the database
+userSchema.pre("save", async function (next) {
+  // Check if password field has been modified (or it's a new user)
+  if (this.isModified("password")) {
+    // 🔐 Hash the password with bcrypt (cost factor = 10)
+    this.password = await bcrypt.hash(this.password, 10);
   }
-  next()
-})
+
+  // ✅ Continue to next middleware or save operation
+  next();
+});
 
 //=========================================================================================
 // ✅ Create the User model from the schema
