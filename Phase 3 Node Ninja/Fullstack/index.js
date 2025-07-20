@@ -52,7 +52,7 @@ app.get("/piyush", (req, res) => {
 // Connect to DB
 db();
 
-//usr routes
+//user routes
 app.use("/api/v1/users", userRoutes)
 
 
