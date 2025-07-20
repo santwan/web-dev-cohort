@@ -1,84 +1,69 @@
+// Import mongoose to define schema and create models
 import mongoose from "mongoose";
+import bcrypt from "bcryptjs";
 
-
-//!=========================================================================================
-// ✅ Define a new schema for the User model
-// A Schema is a blueprint for the shape and structure of documents in a MongoDB collection
-/*
+//=========================================================================================
+// ✅ Define the User schema – this acts as the structure/blueprint for each User document
+//=========================================================================================
 const userSchema = new mongoose.Schema({
 
-  name: {
-    type: String,         // Data type: String
-    required: true,       // This field is mandatory
-    trim: true            // Removes extra spaces from both ends of the string
-  },
+    // 👤 User's name
+    name: String, // (Can be enhanced: `type: String, required: true, trim: true`)
 
-  email: {
-    type: String,
-    required: true,
-    unique: true,         // Ensures no two users have the same email
-    lowercase: true,      // Converts email to lowercase before saving
-    trim: true
-  },
+    // 📧 Email address of the user
+    email: String, // (Should ideally be: `type: String, required: true, unique: true, lowercase: true, trim: true`)
 
-  password: {
-    type: String,
-    required: true,
-    minlength: 6          // Enforces minimum password length
-  },
+    // 🔒 Password (ideally should be hashed before saving)
+    password: String, // (Should ideally use: `type: String, required: true, minlength: 6`)
 
-  createdAt: {
-    type: Date,
-    default: Date.now     // Automatically set to current date and time
-  }
-});
-*/
-
-//? This line creates a Mongoose model named "User" using the userSchema.
-//! const User = mongoose.model("User", userSchema)
-
-//* Mongoose automatically maps this model to a MongoDB collection.
-//* And MongoDB collection names are automatically pluralized and lowercased versions of the model name.
-/* Mongoose Model Name	MongoDB Collection Name
-"User"	users
-"BlogPost"	blogposts
-"CategoryItem"	categoryitems 
-*/
-//! This is Mongoose's default behavior.
-//!=========================================================================================
-
-
-const userSchema = new mongoose.Schema({
-    name: String, 
-    email: String,
-    password: String,
+    // 🛡️ Role of the user: either 'user' or 'admin'
     role: {
-        type: String, 
-        enum: ["user", "admin"],
-        default: "user",
+        type: String,
+        enum: ["user", "admin"], // only these two values are allowed
+        default: "user"          // by default, every new user is assigned the 'user' role
     },
+
+    // ✅ Flag to check whether the user has verified their email or not
     isVerified: {
         type: Boolean,
-        default: false,
-    },
-    verificationToken: {
-        type: String,
-    },
-    resetPasswordToken: {
-        type: String,
-    },
-    resetPasswordExpiresL: {
-        type: Date,
+        default: false
     },
 
+    // 📧 Token for verifying the user's email
+    verificationToken: {
+        type: String
+    },
+
+    // 🔁 Token for password reset (sent via email)
+    resetPasswordToken: {
+        type: String
+    },
+
+    // ⏳ Expiry time for the reset password token
+    resetPasswordExpiresL: { // ⚠️ Typo: `resetPasswordExpiresL` should be `resetPasswordExpires`
+        type: Date
+    }
 
 }, {
-    timestamps: true,
+    // 🕒 Automatically adds createdAt and updatedAt fields to each document
+    timestamps: true
+});
+
+
+userSchema.pre("save", async function(next){
+  if(this.isModified("password")){
+    this.password = bcrypt.hash(this.password, 10)
+  }
+  next()
 })
 
-const User = mongoose.model("User", userSchema)
+//=========================================================================================
+// ✅ Create the User model from the schema
+// Mongoose will create a collection called 'users' from this model
+//=========================================================================================
+const User = mongoose.model("User", userSchema);
 
-
+// ✅ Export the model for use in other files (e.g., controller, routes)
 export {
     User
 }
