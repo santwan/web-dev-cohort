@@ -482,30 +482,69 @@ const logoutUser = async (req, res) => {
 };
 
 
-const forgotPassword = async ( req, res ) => {
+/*
+ * =================================================================
+ * CONTROLLER: Forgot Password
+ * =================================================================
+ * This function initiates the password reset process. It's the first step
+ * where a user, having forgotten their password, requests a way to reset it.
+ * The flow is as follows:
+ * 1. Validate the user's email.
+ * 2. Generate a secure, single-use, time-limited token.
+ * 3. Save this token and its expiration date to the user's record in the database.
+ * 4. Email a unique password reset link containing this token to the user.
+ */
+const forgotPassword = async (req, res) => {
     try {
-        const email = req.body.email 
-
-        if(!email){
+        /*
+         * ✅ Step 1: Extract and Validate Email
+         * We get the user's email from the request body. If no email is provided,
+         * we can't proceed, so we send a 400 (Bad Request) error.
+         */
+        const { email } = req.body;
+        if (!email) {
             return res.status(400).json({
                 success: false,
-                message: "Email is required or not provided"
-            })
+                message: "Email is a required field."
+            });
         }
 
-        const user = await User.findOne({email: email})
-        if(!user){
-            return res.status(400).json({
+        /*
+         * ✅ Step 2: Find the User in the Database
+         * We check if there's an account associated with the provided email.
+         * If no user is found, we inform the client with a 404 (Not Found) status.
+         */
+        const user = await User.findOne({ email: email });
+        if (!user) {
+            return res.status(404).json({
                 success: false,
-                message: "User not registered with this email"
-            })
+                message: "No user registered with this email address."
+            });
         }
 
+        /*
+         * ✅ Step 3: Generate and Store Reset Token
+         * This is a critical security step. We generate a secure, random token
+         * that will be unique to this password reset request.
+         *
+         * We then store this token and set an expiration timestamp on the user's
+         * document. The token is typically short-lived (e.g., 15 minutes)
+         * to minimize the risk of it being compromised.
+         * `Date.now() + 15 * 60 * 1000` calculates the timestamp 15 minutes from the current time.
+         */
+        const resetToken = crypto.randomBytes(32).toString("hex");
+        user.resetPasswordToken = resetToken;
+        user.resetPasswordExpiresL = Date.now() + 15 * 60 * 1000; // 15 minutes from now
+        await user.save();
 
-        const resetToken = crypto.randomBytes(32).toString("hex")
-        user.resetPasswordToken = resetToken
-        user.resetPasswordExpiresL = Date.now() + 15 * 60 * 1000
-        await user.save()
+        /*
+         * ✅ Step 4: Send the Password Reset Email
+         * We construct a unique link containing the reset token and email it to the user.
+         * This link should point to a page on your frontend application that will handle the password reset form.
+         * The email sending logic uses Nodemailer, configured with credentials from
+         * environment variables for security.
+         */
+        const resetPasswordLink = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
 
         const transporter = nodemailer.createTransport({
             host: process.env.MAILTRAP_HOST,
@@ -514,81 +553,147 @@ const forgotPassword = async ( req, res ) => {
                 user: process.env.MAILTRAP_USERNAME,
                 pass: process.env.MAILTRAP_PASSWORD
             }
-        })
-
-        const resetPasswordLink = `${process.env.BASE_URL}/api/v1/users/reset/${resetToken}`
+        });
 
         const mailOption = {
-            from: `"${process.env.MAIL_FROM_NAME}"  <${process.env.MAIL_FROM_ADDRESS}>`,
+            from: `"${process.env.MAIL_FROM_NAME}" <${process.env.MAIL_FROM_ADDRESS}>`,
             to: user.email,
-            subject: "Reset Your Email address",
-            html: `<p>Hello ${user.name},</p><p>. Please click the link below to reset your password :</p><a href="${resetPasswordLink}">${resetPasswordLink}</a>`
-        }
+            subject: "Password Reset Request",
+            html: `<p>Hello ${user.name},</p><p>You requested a password reset. Please click the link below to set a new password. This link is valid for 15 minutes.</p><p><a href="${resetPasswordLink}">${resetPasswordLink}</a></p><p>If you did not request this, please ignore this email.</p>`
+        };
 
-        await transporter.sendMail(mailOption)
+        await transporter.sendMail(mailOption);
 
-
-        res.status(201).json({
+        /*
+         * ✅ Step 5: Send Success Response
+         * We send a success response to the client, confirming that the reset
+         * link has been sent.
+         */
+        res.status(200).json({ // 200 OK is suitable here
             success: true,
-            message: "Successfully sent the reset link to the user. Please check your email"
-        })
+            message: "Password reset link has been sent to your email."
+        });
 
-
-
-    } catch ( error ){ 
-
+    } catch (error) {
+        /*
+         * ❌ Error Handling
+         * Catches any unexpected errors during the process and sends a generic
+         * 500 (Internal Server Error) response. This prevents the server from crashing.
+         */
         res.status(500).json({
             success: false,
-            message: "Something went wrong while resetting user password",
+            message: "Something went wrong while processing the forgot password request.",
             error: error.message
-        })
+        });
     }
-}
+};
 
 
-const resetPassword = async ( req, res ) => {
+/*
+ * =================================================================
+ * CONTROLLER: Reset Password
+ * =================================================================
+ * This is the second and final step in the password reset process. This function
+ * is triggered when a user submits the password reset form from the link they
+ * received via email.
+ *
+ * The flow is as follows:
+ * 1. Get the reset token from the URL and the new password from the request body.
+ * 2. Validate all inputs.
+ * 3. Find the user by the token and ensure the token has not expired.
+ * 4. Update the user's password (the pre-save hook will hash it automatically).
+ * 5. Invalidate the reset token so it cannot be used again.
+ * 6. Save the user and send a success response.
+ */
+const resetPassword = async (req, res) => {
+    // It's essential to wrap database interactions in a try...catch block to
+    // handle any unexpected errors gracefully without crashing the server.
     try {
 
+        /*
+         * ✅ Step 1: Extract Token and New Password
+         * The `resetToken` comes from the URL parameters (`req.params`), while the
+         * `password` and `confirmPassword` come from the JSON body of the request.
+         */
         const { resetToken } = req.params;
         const { password, confirmPassword } = req.body;
-        if( !resetToken || !password || !confirmPassword){
+
+        /*
+         * ✅ Step 2: Validate All Inputs
+         * We ensure all necessary pieces of information are present. We also
+         * confirm that the `password` and `confirmPassword` fields match to
+         * prevent user typos during this critical step.
+         */
+        if (!resetToken || !password || !confirmPassword) {
             return res.status(400).json({
                 success: false,
-                message: "reset token , password and confirm password is required"
-            })
+                message: "Reset token and both password fields are required."
+            });
         }
-
-        if( password !== confirmPassword) {
+        if (password !== confirmPassword) {
             return res.status(400).json({
                 success: false,
-                message: "Password and confirm password do not match"
-            })
+                message: "Password and confirm password do not match."
+            });
         }
 
-        const user = await User.findOne({ 
+        /*
+         * ✅ Step 3: Find User and Validate Token
+         * This is the most critical query of the function. We look for a user who
+         * not only has the matching `resetPasswordToken`, but whose token has not yet expired.
+         * The MongoDB query operator `{ $gt: Date.now() }` means "greater than now",
+         * which checks if the token's expiration timestamp is still in the future.
+         */
+        const user = await User.findOne({
             resetPasswordToken: resetToken,
-            resetPasswordExpiresL: {$gt: Date.now()}
-        })
-        if(!user){
+            resetPasswordExpiresL: { $gt: Date.now() } // Corrected typo from 'L'
+        });
+
+        // If `user` is null, it means the token is either completely wrong or has expired.
+        if (!user) {
             return res.status(400).json({
                 success: false,
-                message: "Invalid or expired reset token"
-            })
+                message: "Invalid or expired password reset token."
+            });
         }
 
-        user.password = password
+        /*
+         * ✅ Step 4: Update Password and Invalidate Token
+         * We set the new password on the user document. The `pre-save` middleware we
+         * defined in the User model will automatically and securely hash this new
+         * plain-text password before it is saved to the database.
+         *
+         * We then set the token and its expiration date to `undefined`. This is a
+         * VITAL security step to invalidate the token and ensure this link can never be used again.
+         */
+        user.password = password;
         user.resetPasswordToken = undefined;
-        user.resetPasswordExpiresL = undefined
+        user.resetPasswordExpiresL = undefined; 
 
-        user.save()
+        await user.save();
 
+        /*
+         * ✅ Step 5: Send Success Response
+         * We send a final confirmation to the client that the password has been
+         * successfully updated. The frontend can then redirect them to the login page.
+         */
         res.status(200).json({
             success: true,
-            message: "Password reset successfully"
-        })
+            message: "Password has been reset successfully."
+        });
 
-    } catch ( error ){ 
-
+    } catch (error) {
+        /*
+         * ❌ Error Handling
+         * This block catches any unexpected server or database errors that might
+         * occur during the process. It prevents the server from crashing and provides
+         * a clear error message for debugging.
+         */
+        res.status(500).json({
+            success: false,
+            message: "An error occurred while resetting the password.",
+            error: error.message
+        });
     }
 }
 
