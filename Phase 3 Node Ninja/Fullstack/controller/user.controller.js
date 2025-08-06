@@ -394,25 +394,87 @@ const getMe = async ( req, res ) => {
 }
 
 
-const logoutUser = async ( req, res ) => {
+// const logoutUser = async ( req, res ) => {
+//     try {
+//         res.cookie('token', '', {
+//             // expires: new Date(0)
+//         })
+//         return res.status(200).json({
+//             success: true,
+//             message: "Logged out successfully",
+//         })
+
+//     } catch ( error ){ 
+//         res.status(500).json({
+//             success: false,
+//             message: "An unexpected error occurred while loggging out.",
+//             error: error.message,
+//         });
+
+//     }
+// }
+
+
+/*
+ * =================================================================
+ * CONTROLLER: User Logout
+ * =================================================================
+ * This function handles the user logout process. In a stateless JWT authentication
+ * system, "logging out" on the server doesn't technically invalidate the token itself
+ * (as it's valid until its expiration). Instead, the primary goal of logout is to
+ * instruct the client's browser to delete the token, effectively ending the session
+ * on their end.
+ *
+ * We achieve this by overwriting the existing `token` cookie with an empty one
+ * that is set to expire immediately.
+ */
+const logoutUser = async (req, res) => {
     try {
-        res.cookie('token', '', {
-            // expires: new Date(0)
-        })
+        /*
+         * ✅ Step 1: Clear the Authentication Cookie
+         * We use the `res.cookie()` method to send a new cookie to the client.
+         * By setting the cookie with the same name ('token'), an empty value (''),
+         * and an expiration date in the past, we are instructing the browser
+         * to delete the cookie immediately.
+         */
+        const cookieOptions = {
+            // It's crucial that these options (especially `httpOnly` and `secure`)
+            // match the options used when the cookie was set during login.
+            // This ensures the browser targets the correct cookie for deletion.
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            // Setting the expiration date to a time in the past (Date(0) is epoch time)
+            // is the standard way to command a browser to delete a cookie.
+            expires: new Date(0)
+        };
+
+        res.cookie('token', '', cookieOptions);
+
+        /*
+         * ✅ Step 2: Send a Success Response
+         * We respond with a 200 (OK) status to confirm to the client that the logout
+         * process was initiated successfully. The frontend application can then
+         * update its state and redirect the user to the homepage or login page.
+         */
         return res.status(200).json({
             success: true,
             message: "Logged out successfully",
-        })
-
-    } catch ( error ){ 
-        res.status(500).json({
-            success: false,
-            message: "An unexpected error occurred while loggging out.",
-            error: error.message,
         });
 
+    } catch (error) {
+        /*
+         * ❌ Error Handling
+         * This `catch` block acts as a safety net. While errors are less common
+         * in a simple function like this, it's good practice to handle any
+         * unexpected server issues that might occur.
+         */
+        res.status(500).json({
+            success: false,
+            message: "An unexpected error occurred while logging out.",
+            error: error.message,
+        });
     }
-}
+};
 
 
 const resetPassword = async ( req, res ) => {
