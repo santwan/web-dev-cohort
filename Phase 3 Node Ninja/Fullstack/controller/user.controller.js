@@ -12,6 +12,9 @@ import bcrypt from "bcrypt"
 
 //importing JWT
 import jwt from "jsonwebtoken"
+import { isMarkedAsUntransferable } from "worker_threads"
+import { json } from "stream/consumers"
+import { flushCompileCache } from "module"
 
 //! =========================================================================================================
 /*
@@ -255,9 +258,11 @@ const login = async (req, res) => {
         const { email, password } = req.body;
         if (!email || !password) {
             return res.status(400).json({
-                message: "Email and password are required"
+                message: "Email and password are required",
             });
         }
+
+
 
         /*
          * ✅ Step 3: Find the User in the Database
@@ -316,7 +321,7 @@ const login = async (req, res) => {
          */
         const token = jwt.sign(
             { id: user._id, role: user.role },
-            process.env.JWT_SECRET, // Using the secret from environment variables
+            process.env.JWT_SECRET,
             { expiresIn: '24h' }
         );
 
@@ -477,16 +482,110 @@ const logoutUser = async (req, res) => {
 };
 
 
-const resetPassword = async ( req, res ) => {
+const forgotPassword = async ( req, res ) => {
     try {
+        const email = req.body.email 
+
+        if(!email){
+            return res.status(400).json({
+                success: false,
+                message: "Email is required or not provided"
+            })
+        }
+
+        const user = await User.findOne({email: email})
+        if(!user){
+            return res.status(400).json({
+                success: false,
+                message: "User not registered with this email"
+            })
+        }
+
+
+        const resetToken = crypto.randomBytes(32).toString("hex")
+        user.resetPasswordToken = resetToken
+        user.resetPasswordExpiresL = Date.now() + 15 * 60 * 1000
+        await user.save()
+
+        const transporter = nodemailer.createTransport({
+            host: process.env.MAILTRAP_HOST,
+            port: process.env.MAILTRAP_PORT,
+            auth: {
+                user: process.env.MAILTRAP_USERNAME,
+                pass: process.env.MAILTRAP_PASSWORD
+            }
+        })
+
+        const resetPasswordLink = `${process.env.BASE_URL}/api/v1/users/reset/${resetToken}`
+
+        const mailOption = {
+            from: `"${process.env.MAIL_FROM_NAME}"  <${process.env.MAIL_FROM_ADDRESS}>`,
+            to: user.email,
+            subject: "Reset Your Email address",
+            html: `<p>Hello ${user.name},</p><p>. Please click the link below to reset your password :</p><a href="${resetPasswordLink}">${resetPasswordLink}</a>`
+        }
+
+        await transporter.sendMail(mailOption)
+
+
+        res.status(201).json({
+            success: true,
+            message: "Successfully sent the reset link to the user. Please check your email"
+        })
+
+
 
     } catch ( error ){ 
 
+        res.status(500).json({
+            success: false,
+            message: "Something went wrong while resetting user password",
+            error: error.message
+        })
     }
 }
 
-const forgotPassword = async ( req, res ) => {
+
+const resetPassword = async ( req, res ) => {
     try {
+
+        const { resetToken } = req.params;
+        const { password, confirmPassword } = req.body;
+        if( !resetToken || !password || !confirmPassword){
+            return res.status(400).json({
+                success: false,
+                message: "reset token , password and confirm password is required"
+            })
+        }
+
+        if( password !== confirmPassword) {
+            return res.status(400).json({
+                success: false,
+                message: "Password and confirm password do not match"
+            })
+        }
+
+        const user = await User.findOne({ 
+            resetPasswordToken: resetToken,
+            resetPasswordExpiresL: {$gt: Date.now()}
+        })
+        if(!user){
+            return res.status(400).json({
+                success: false,
+                message: "Invalid or expired reset token"
+            })
+        }
+
+        user.password = password
+        user.resetPasswordToken = undefined;
+        user.resetPasswordExpiresL = undefined
+
+        user.save()
+
+        res.status(200).json({
+            success: true,
+            message: "Password reset successfully"
+        })
 
     } catch ( error ){ 
 
