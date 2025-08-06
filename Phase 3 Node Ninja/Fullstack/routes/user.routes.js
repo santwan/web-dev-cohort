@@ -5,7 +5,15 @@ import express from "express";
 import {
     registerUser, // Handles the user registration logic
     verifyUser,   // Handles the logic for verifying a user's email/token
+    login,
+    getMe,
+    resetPassword,
+    forgotPassword,
+    logoutUser,
+
 } from "../controller/user.controller.js";
+
+import { isLoggedIn } from "../middleware/auth.middleware.js";
 
 // Creating a new router object to define route endpoints for users
 const router = express.Router();
@@ -43,6 +51,10 @@ router.get("/verify/:token", verifyUser);
 
 
 router.post("/login", login)
+
+router.get("/me", isLoggedIn, getMe)
+
+router.get("/logout", isLoggedIn, logoutUser)
 
 // Exporting the router so it can be mounted in the main app (e.g., app.use("/api/users", router))
 export default router;
