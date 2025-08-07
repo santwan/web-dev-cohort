@@ -1,3 +1,37 @@
+# 🔐 Node.js Authentication API
+
+A secure and modular authentication system built using **Node.js**, **Express**, **MongoDB**, and **Mailtrap**. Includes:
+
+- ✅ User registration with email verification
+- 🔐 Secure login with JWT
+- 🔁 Forgot/Reset password flow
+- 📬 Mailtrap for safe email testing
+- 🧪 Postman-friendly endpoints
+
+---
+
+## 📁 Project Folder Structure
+
+
+
+## 🗂️ Table of Contents
+
+### 🧾 Express
+
+- [req object](https://www.notion.so/Understand-the-req-Object-247383ba1c7380bb9c26e948f9f5e4d3?source=copy_link)
+- [Request Types in Express (Backend) ](https://www.notion.so/Request-Types-in-Express-Backend-What-Goes-Where-247383ba1c7380b7a7c2d33910b5d530?source=copy_link)
+- []()
+
+---
+
+
+
+
+
+
+
+
+
 
 ## `app.use(express.json());` and `app.use(express.urlencoded({ extended: true }));`
 <details>
@@ -34,3 +68,5 @@ app.use(express.urlencoded({ extended: true }));
 - It's more powerful and flexible than extended: false, so it's generally recommended for modern apps.
 
 </details>
+
+
