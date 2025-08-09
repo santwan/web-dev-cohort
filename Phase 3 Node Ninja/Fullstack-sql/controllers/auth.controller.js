@@ -41,10 +41,23 @@ const registerUser = async (req , res ) => {
             }
         });
 
-        return res.status(201).json({ message: "User registered successfully", user: newUser });
+        // Here you would typically send a verification email to the user
+        // For example, using a service like SendGrid or Nodemailer
+
+        
+
+        return res.status(201).json({ 
+            message: "User registered successfully", 
+            user: newUser 
+        });
+
     } catch (error) {
         console.error("Error registering user:", error);
-        return res.status(500).json({ message: "Internal server error" });
+        return res.status(500).json({ 
+            success: false,
+            message: "Internal server error" ,
+            error: error.message
+        });
     }
 
 }
