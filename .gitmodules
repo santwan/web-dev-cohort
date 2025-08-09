@@ -1,0 +1,4 @@
+[submodule "projects/chai-code-redesign"]
+	path = projects/chai-code-redesign
+	url = https://github.com/santwan/chai-code-redesign.git
+	branch = main
